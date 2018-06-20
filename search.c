@@ -21,7 +21,7 @@ move_t think(board_t* board) {
     }
 
     int score;
-    int max_depth = 6;
+    int max_depth = 8; // MAX_PLY
     memset(white_history_heuristic, 0, sizeof(white_history_heuristic));
     memset(black_history_heuristic, 0, sizeof(black_history_heuristic));
     for (int depth = 1; depth <= max_depth; depth++) {
@@ -102,6 +102,9 @@ int search(board_t* board, int alpha, int beta, unsigned int ply, unsigned int d
 }
 
 
+/*
+    Performs a rough move ordering based on the history heuristic.
+*/
 void order_moves(move_t* move_list, move_t* end_of_move_list, int current_index, bool to_move, unsigned int ply, unsigned int depth) {
     #define swap(a,b) (((a) ^= (b)), ((b) ^= (a)), ((a) ^= (b)))
 

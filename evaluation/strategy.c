@@ -89,7 +89,7 @@ int evaluate_rook(unsigned int square, const board_t* board, unsigned int side, 
     #define IS_ROOK_BEHIND_PASSED_PAWN(color, other_color, comparator) \
         bitboard_t passed_pawn_candidates = PARTIAL_FILE_BY_SQUARE_MASK[square]; \
         while (passed_pawn_candidates) { \
-            file_square = first_bit_set(passed_pawn_candidates); \
+            file_square = FIRST_BIT_SET(passed_pawn_candidates); \
             if (SQUARE_MASK[file_square] & board->piece_bitboard[color##_PAWN]) \
                 if (!(color##_PASSED_PAWN_OBSTACLE_MASK[file_square] & board->piece_bitboard[other_color##_PAWN])) \
                     if ((FILE_BY_SQUARE_MASK[square] & SQUARE_MASK[file_square]) && (square comparator file_square)) \

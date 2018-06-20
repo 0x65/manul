@@ -263,8 +263,7 @@ void set_board_from_fen_string(board_t* board, const char* fen_string) {
 
 
 /*
-    Prints a human-readable form of a chessboard. White pieces are represented by capital letters,
-    black ones by lowercase.
+    Prints a human-readable form of a chessboard. Pieces are represented in the unicode chess characters.
 */
 void print_board(const board_t* board) {
     for (int file = 0; file < 8; file++) {

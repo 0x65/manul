@@ -17,19 +17,8 @@ void print_bitboard(bitboard_t bitboard) {
 
 
 /*
-    Returns the index of the least significant bit set. Implementation of de Bruijn method.
-*/
-unsigned int first_bit_set(bitboard_t bitboard) {
-   unsigned int folded;
-   bitboard ^= bitboard - 1;
-   folded = (int)bitboard ^ (bitboard >> 32);
-   return DEBRUIJN_LSB_LOOKUP[folded * 0x78291ACF >> 26];
-}
-
-
-/*
-    Counts number of bits of a sparse bitboard. Takes roughly (3*number of bits set) instructions.
-    Algorithm is Peter Wegner's.
+    Counts number of bits of a sparse bitboard. For a small amount of bits set (roughly up to 4),
+    works faster than BIT_COUNT. Algorithm is Peter Wegner's.
 */
 unsigned int sparse_bit_count(bitboard_t bitboard) {
     unsigned int count;
@@ -37,26 +26,4 @@ unsigned int sparse_bit_count(bitboard_t bitboard) {
         REMOVE_FIRST_BIT_SET(bitboard);
     }
     return count;
-}
-
-
-/*
-    Counts number of bits of a bitboard. Takes roughly 24 instructions.
-    Algorithm is MIT's HAKMEM.
-*/
-unsigned int bit_count(bitboard_t bitboard) {
-    static const bitboard_t M1 = 0x5555555555555555;
-    static const bitboard_t M2 = 0x3333333333333333;
-    static const bitboard_t M4 = 0x0F0F0F0F0F0F0F0F;
-    static const bitboard_t M8 = 0x00FF00FF00FF00FF;
-    static const bitboard_t M16 = 0x0000FFFF0000FFFF;
-    static const bitboard_t M32 = 0x00000000FFFFFFFF;
-
-    bitboard = (bitboard & M1) + ((bitboard >> 1) & M1);
-    bitboard = (bitboard & M2) + ((bitboard >> 2) & M2);
-    bitboard = (bitboard & M4) + ((bitboard >> 4) & M4);
-    bitboard = (bitboard & M8) + ((bitboard >> 8) & M8);
-    bitboard = (bitboard & M16) + ((bitboard >> 16) & M16);
-    bitboard = (bitboard & M32) + ((bitboard >> 32) & M32);
-    return (unsigned int)bitboard;
 }

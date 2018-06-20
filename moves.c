@@ -21,14 +21,14 @@ move_t* generate_pseudolegal_moves(const board_t* board, move_t* move_list) {
 
     #define GENERATE_MOVES(from_square, moves, piece_name) possible_moves = targets & moves; \
         while(possible_moves) { \
-            to_square = first_bit_set(possible_moves); \
+            to_square = FIRST_BIT_SET(possible_moves); \
             *move_list++ = (from_square) + (to_square << 6) + (piece_name << 12) + (board->pieces[to_square] << 16); \
             REMOVE_FIRST_BIT_SET(possible_moves); \
         }
 
     #define GENERATE_MOVES_FOR_ALL(move_macro, piece_name) existing_pieces = board->piece_bitboard[piece_name]; \
         while (existing_pieces) { \
-            from_square = first_bit_set(existing_pieces); \
+            from_square = FIRST_BIT_SET(existing_pieces); \
             GENERATE_MOVES(from_square, move_macro(from_square), piece_name); \
             REMOVE_FIRST_BIT_SET(existing_pieces); \
         }
@@ -36,13 +36,13 @@ move_t* generate_pseudolegal_moves(const board_t* board, move_t* move_list) {
     #define GENERATE_PAWN_MOVES(color, other_color, double_rank, promotion_rank) \
             existing_pieces = board->piece_bitboard[color##_PAWN]; \
             while (existing_pieces) { \
-                from_square = first_bit_set(existing_pieces); \
+                from_square = FIRST_BIT_SET(existing_pieces); \
                 possible_moves = color##_PAWN_MOVE_MASK[from_square] & (~board->all_pieces_bitboard); \
                 if (RANK_OF(from_square) == double_rank && possible_moves) \
                     possible_moves |= color##_PAWN_DOUBLE_MOVE_MASK[from_square] & (~board->all_pieces_bitboard); \
                 possible_moves |= color##_PAWN_ATTACK_MASK[from_square] & board->color_bitboard[other_color]; \
                 while (possible_moves) { \
-                    to_square = first_bit_set(possible_moves); \
+                    to_square = FIRST_BIT_SET(possible_moves); \
                     if (RANK_OF(to_square) == promotion_rank) { \
                         move_t promotion = (from_square) + (to_square << 6) + (color##_PAWN << 12) + (board->pieces[to_square] << 16) + 0x400000; \
                         *move_list++ = promotion + (color##_KNIGHT << 23); \
