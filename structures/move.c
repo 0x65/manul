@@ -7,7 +7,7 @@ void print_move(move_t move) {
     int from_square = MOVE_FROM(move), to_square = MOVE_TO(move);
 
     if (IS_CASTLE(move)) {
-        if (MOVE_TO(move) > MOVE_FROM(move)) printf("O-O");
+        if (to_square > from_square) printf("O-O");
         else printf("O-O-O");
     } else {
         printf("%c%d%c%d", FILE_OF(from_square)+'a', RANK_OF(from_square)+1, FILE_OF(to_square)+'a', RANK_OF(to_square)+1);

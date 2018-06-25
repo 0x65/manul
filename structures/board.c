@@ -11,7 +11,6 @@
 void make_move(board_t* board, move_t move) {
     #define MAKE_CASTLE(color, removed_castle_bits, king_side_from, king_side_to, queen_side_from, queen_side_to) \
         board->can_castle &= removed_castle_bits; \
-        board->king_position[color] = to_square; \
         if (to_square > from_square) { \
             UPDATE_CASTLE_BITBOARDS(color, color##_ROOK, king_side_to, king_side_from); \
             board->hash_key ^= (hash_keys.keys[king_side_to][color##_ROOK] ^ hash_keys.keys[king_side_from][color##_ROOK]); \
@@ -103,7 +102,6 @@ void make_move(board_t* board, move_t move) {
 */
 void undo_move(board_t* board, move_t move) {
     #define UNDO_CASTLE(color, king_side_from, king_side_to, queen_side_from, queen_side_to) \
-        board->king_position[color] = from_square; \
         if (to_square > from_square) { UPDATE_CASTLE_BITBOARDS(color, color##_ROOK, king_side_from, king_side_to); } \
         else { UPDATE_CASTLE_BITBOARDS(color, color##_ROOK, queen_side_from, queen_side_to); }
 

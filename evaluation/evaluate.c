@@ -11,8 +11,8 @@ int evaluate(const board_t* board) {
     if (is_theoretical_draw(board)) return DRAW_SCORE;
 
     // the winning side should prefer exchanges
-    if (board->material[WHITE] > board->material[BLACK]) score += (78 - total_material) >> 1;
-    else if (board->material[BLACK] > board->material[WHITE]) score -= (78 - total_material) >> 1;
+    if (score > 0) score += (78 - total_material) >> 1;
+    else if (score < 0) score -= (78 - total_material) >> 1;
 
     // get individual piece bonuses
     for (int square = 0; square < 64; square++) {

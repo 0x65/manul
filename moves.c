@@ -109,7 +109,7 @@ char is_king_in_check(const board_t* board, unsigned int side) {
 */
 bool is_theoretical_draw(const board_t* board) {
     unsigned int total_material = board->material[WHITE] + board->material[BLACK];
-    if ((total_material < 13) && !board->piece_bitboard[WHITE_PAWN] && !board->piece_bitboard[BLACK_PAWN]) {
+    if ((total_material <= 13) && !board->piece_bitboard[WHITE_PAWN] && !board->piece_bitboard[BLACK_PAWN]) {
         if ((board->material[WHITE] < 4) && (board->material[BLACK] < 4)) return true;
         if (total_material == 6) {
             if (board->material[WHITE] == 6 && !board->piece_bitboard[WHITE_BISHOP]) return true;
