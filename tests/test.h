@@ -1,12 +1,10 @@
 #ifndef _TEST_H
 #define _TEST_H
 
-#define SUCCESS (0)
-#define ERROR (1)
+#include "../structures/board.h"
 
-#include "test_board.h"
-#include "test_hash.h"
-#include "test_moves.h"
+#define TEST_SUCCESS (0)
+#define TEST_ERROR (1)
 
 int run_all_tests();
 void initialize_testing_board(board_t* board);

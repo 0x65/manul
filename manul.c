@@ -24,7 +24,10 @@ int main(int argc, char* argv[]) {
     hash_init();
 
     // TODO: separate into separate makefile target
-    run_all_tests();
+    if (run_all_tests() == TEST_ERROR) {
+        fprintf(stderr, "Test errors found\n");
+        return 1;
+    }
 
     char buffer[64];
     int len;

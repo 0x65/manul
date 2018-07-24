@@ -1,4 +1,81 @@
+#include <stdio.h>
+
+#include "../structures/move.h"
+#include "../moves.h"
+
+#include "test.h"
 #include "test_board.h"
+
+#define ELEMENTS_IN(array) (sizeof array/sizeof *array)
+
+/*
+    Returns 1 if the boards are the same, or 0 if the boards are different. Useful for make/undo test.
+    Memcmp can't be used in this case since the board state array might differ (TODO: can we just
+    copy the board state array from one onto the other?)
+*/
+int compare_boards(board_t* board1, board_t* board2) {
+    for (int i = 0; i < NUMBER_OF_PIECES-2; i++) {
+        if (board1->piece_bitboard[i] != board2->piece_bitboard[i]) {
+            return 0;
+        }
+    }
+
+    if (board1->color_bitboard[WHITE] != board2->color_bitboard[WHITE]) {
+        return 0;
+    }
+
+    if (board1->color_bitboard[BLACK] != board2->color_bitboard[BLACK]) {
+        return 0;
+    }
+
+    if (board1->king_position[WHITE] != board2->king_position[WHITE]) {
+        return 0;
+    }
+
+    if (board1->king_position[BLACK] != board2->king_position[BLACK]) {
+        return 0;
+    }
+
+    for (int i = A1; i < H8; i++) {
+        if (board1->pieces[i] != board2->pieces[i]) {
+            return 0;
+        }
+    }
+
+    if (board1->to_move != board2->to_move) {
+        return 0;
+    }
+
+    if (board1->can_castle != board2->can_castle) {
+        return 0;
+    }
+
+    if (board1->passed_square != board2->passed_square) {
+        return 0;
+    }
+
+    if (board1->fifty_move_rule_counter != board2->fifty_move_rule_counter) {
+        return 0;
+    }
+
+    if (board1->material[WHITE] != board2->material[WHITE]) {
+        return 0;
+    }
+
+    if (board1->material[BLACK] != board2->material[BLACK]) {
+        return 0;
+    }
+
+    if (board1->hash_key != board2->hash_key) {
+        return 0;
+    }
+
+    if (board1->state_index != board2->state_index) {
+        return 0;
+    }
+
+    return 1;
+}
 
 /*
     Tests `make_move` and `undo_move` by making and undoing every single move for
@@ -15,50 +92,27 @@ int test_make_undo_move() {
 
     board_t board[ELEMENTS_IN(fen_positions)], board_original[ELEMENTS_IN(fen_positions)];
     move_t move_list[256];
-    int i;
 
-    for (i = 0; i < ELEMENTS_IN(fen_positions); i++) {
+    for (int i = 0; i < ELEMENTS_IN(fen_positions); i++) {
         set_board_from_fen_string(&board[i], fen_positions[i]);
         memcpy(&board_original[i], &board[i], sizeof(board_t));
     }
 
-    clock_t start = clock();
-    for (i = 0; i < ELEMENTS_IN(fen_positions); i++) {
+    for (int i = 0; i < ELEMENTS_IN(fen_positions); i++) {
         move_t* end_of_list = generate_pseudolegal_moves(&board[i], move_list);
+
         for (int j = 0; move_list[j] != *end_of_list; j++) {
             make_move(&board[i], move_list[j]);
             undo_move(&board[i], move_list[j]);
+
             if (!compare_boards(&board[i], &board_original[i])) {
                 fprintf(stderr, "test_make_undo_move -- Test \"%s\" failed: move %d.\n", fen_positions[i], j);
-                return ERROR;
+                return TEST_ERROR;
             }
         }
     }
 
-    return SUCCESS;
-}
-
-
-/*
-    Returns 1 if the boards are the same, or 0 if the boards are different. Useful for make/undo test.
-    Memcmp can't be used in this case since the board state array will differ.
-*/
-int compare_boards(board_t* board1, board_t* board2) {
-    for (int i = 0; i < NUMBER_OF_PIECES-2; i++) if (board1->piece_bitboard[i] != board2->piece_bitboard[i]) return 0;
-    if (board1->color_bitboard[0] != board2->color_bitboard[0]) return 0;
-    if (board1->color_bitboard[1] != board2->color_bitboard[1]) return 0;
-    if (board1->king_position[WHITE] != board2->king_position[WHITE]) return 0;
-    if (board1->king_position[BLACK] != board2->king_position[BLACK]) return 0;
-    for (int i = A1; i < H8; i++) if (board1->pieces[i] != board2->pieces[i]) return 0;
-    if (board1->to_move != board2->to_move) return 0;
-    if (board1->can_castle != board2->can_castle) return 0;
-    if (board1->passed_square != board2->passed_square) return 0;
-    if (board1->fifty_move_rule_counter != board2->fifty_move_rule_counter) return 0;
-    if (board1->material[0] != board2->material[0]) return 0;
-    if (board1->material[1] != board2->material[1]) return 0;
-    if (board1->hash_key != board2->hash_key) return 0;
-    if (board1->state_index != board2->state_index) return 0;
-    return 1;
+    return TEST_SUCCESS;
 }
 
 
@@ -68,7 +122,6 @@ int compare_boards(board_t* board1, board_t* board2) {
 int test_repetition_count() {
     board_t board;
     initialize_testing_board(&board);
-    hash_init();
 
     board.to_move = BLACK;
     board.pieces[H8] = BLACK_ROOK;
@@ -79,32 +132,37 @@ int test_repetition_count() {
     board.color_bitboard[WHITE] = board.piece_bitboard[WHITE_ROOK];
     board.all_pieces_bitboard = board.color_bitboard[WHITE] | board.color_bitboard[BLACK];
 
-    // start position: position has occurred once
-    make_move(&board, move_from_text("h8h7", &board));
-    make_move(&board, move_from_text("c3c5", &board));
-    make_move(&board, move_from_text("h7h8", &board));
-    make_move(&board, move_from_text("c5c3", &board)); // after this move: position has occurred twice
-    make_move(&board, move_from_text("h8h7", &board));
-    make_move(&board, move_from_text("c3c5", &board));
-    make_move(&board, move_from_text("h7h8", &board));
-    make_move(&board, move_from_text("c5c3", &board)); // after this move: position has occured thrice
-    if (repetition_count(&board) != 3) {
-        fprintf(stderr, "test_repetition_count -- Test 1 failed.\n");
-        return ERROR;
-    }
     make_move(&board, move_from_text("h8h7", &board));
     make_move(&board, move_from_text("c3c5", &board));
     make_move(&board, move_from_text("h7h8", &board));
     make_move(&board, move_from_text("c5c3", &board));
-    if (repetition_count(&board) != 4) {
-        fprintf(stderr, "test_repetition_count -- Test 2 failed.\n");
-        return ERROR;
-    }
-    make_move(&board, move_from_text("h8h6", &board));
-    if (repetition_count(&board) != 1) {
-        fprintf(stderr, "test_repetition_count -- Test 3 failed.\n");
-        return ERROR;
+
+    make_move(&board, move_from_text("h8h7", &board));
+    make_move(&board, move_from_text("c3c5", &board));
+    make_move(&board, move_from_text("h7h8", &board));
+    make_move(&board, move_from_text("c5c3", &board));
+
+    if (repetition_count(&board) != 3) {
+        fprintf(stderr, "test_repetition_count -- Test 1 failed.\n");
+        return TEST_ERROR;
     }
 
-    return SUCCESS;
+    make_move(&board, move_from_text("h8h7", &board));
+    make_move(&board, move_from_text("c3c5", &board));
+    make_move(&board, move_from_text("h7h8", &board));
+    make_move(&board, move_from_text("c5c3", &board));
+
+    if (repetition_count(&board) != 4) {
+        fprintf(stderr, "test_repetition_count -- Test 2 failed.\n");
+        return TEST_ERROR;
+    }
+
+    make_move(&board, move_from_text("h8h6", &board));
+
+    if (repetition_count(&board) != 1) {
+        fprintf(stderr, "test_repetition_count -- Test 3 failed.\n");
+        return TEST_ERROR;
+    }
+
+    return TEST_SUCCESS;
 }

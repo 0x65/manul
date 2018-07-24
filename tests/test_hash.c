@@ -1,3 +1,12 @@
+#include <stdio.h>
+
+#include "../structures/board.h"
+#include "../structures/hash.h"
+#include "../structures/move.h"
+#include "../common.h"
+#include "../masks.h"
+
+#include "test.h"
 #include "test_hash.h"
 
 /*
@@ -26,27 +35,35 @@ int test_hash() {
     board.all_pieces_bitboard = board.color_bitboard[WHITE] | board.color_bitboard[BLACK];
 
     key_t key = board.hash_key;
-    for (int test = 0; test < 2; test++) {
-        make_move(&board, move_from_text("b8c6", &board)); board.to_move = BLACK;
-        make_move(&board, move_from_text("c6e7", &board)); board.to_move = BLACK;
-        make_move(&board, move_from_text("e7d5", &board)); board.to_move = BLACK;
-        if (test == 1) {
-            make_move(&board, move_from_text("d5c3", &board)); board.to_move = BLACK;
-            make_move(&board, move_from_text("c3d5", &board)); board.to_move = BLACK;
-        }
-        make_move(&board, move_from_text("d5e7", &board)); board.to_move = BLACK;
-        make_move(&board, move_from_text("e7c6", &board)); board.to_move = BLACK;
-        make_move(&board, move_from_text("c6b8", &board)); board.to_move = BLACK;
 
-        if (test == 0 && key != board.hash_key) {
-            fprintf(stderr, "test_hash -- Test 0 failed.");
-            return ERROR;
-        }
-        else if (test == 1 && key == board.hash_key) {
-            fprintf(stderr, "test_hash -- Test 1 failed.");
-            return ERROR;
-        }
+    make_move(&board, move_from_text("b8c6", &board)); board.to_move = BLACK;
+    make_move(&board, move_from_text("c6e7", &board)); board.to_move = BLACK;
+    make_move(&board, move_from_text("e7d5", &board)); board.to_move = BLACK;
+
+    make_move(&board, move_from_text("d5e7", &board)); board.to_move = BLACK;
+    make_move(&board, move_from_text("e7c6", &board)); board.to_move = BLACK;
+    make_move(&board, move_from_text("c6b8", &board)); board.to_move = BLACK;
+
+    if (key != board.hash_key) {
+        fprintf(stderr, "test_hash -- Test 0 failed.");
+        return TEST_ERROR;
     }
 
-    return SUCCESS;
+    make_move(&board, move_from_text("b8c6", &board)); board.to_move = BLACK;
+    make_move(&board, move_from_text("c6e7", &board)); board.to_move = BLACK;
+    make_move(&board, move_from_text("e7d5", &board)); board.to_move = BLACK;
+
+    make_move(&board, move_from_text("d5c3", &board)); board.to_move = BLACK;
+    make_move(&board, move_from_text("c3d5", &board)); board.to_move = BLACK;
+
+    make_move(&board, move_from_text("d5e7", &board)); board.to_move = BLACK;
+    make_move(&board, move_from_text("e7c6", &board)); board.to_move = BLACK;
+    make_move(&board, move_from_text("c6b8", &board)); board.to_move = BLACK;
+
+    if (key == board.hash_key) {
+        fprintf(stderr, "test_hash -- Test 1 failed.");
+        return TEST_ERROR;
+    }
+
+    return TEST_SUCCESS;
 }
