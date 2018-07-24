@@ -1,63 +1,76 @@
+#include <locale.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <time.h>
+#include <wchar.h>
+
+#include "evaluation/constants.h"
+#include "evaluation/evaluate.h"
+#include "structures/bitboard.h"
+#include "structures/board.h"
+#include "structures/hash.h"
+#include "tests/test.h"
 
 #include "common.h"
 #include "masks.h"
 #include "moves.h"
-#include "structures/bitboard.h"
-#include "structures/board.h"
-#include "evaluation/evaluate.h"
-#include "evaluation/constants.h"
 #include "search.h"
 #include "utilities.h"
-#include "tests/test.h"
 
-#include <locale.h>
-#include <wchar.h>
-
-#include "structures/hash.h"
-#include <time.h>
 
 int main(int argc, char* argv[]) {
     setlocale(LC_ALL, "");
+    hash_init();
 
-    board_t board;
-    RESET_BOARD(board);
-    char buffer[256];
+    // TODO: separate into separate makefile target
+    run_all_tests();
+
+    char buffer[64];
     int len;
 
-    hash_init();
-    run_all_tests();
-    print_board(&board);
+    move_t move = 0, last_move = 0;
+    board_t board;
+    RESET_BOARD(board);
 
-    move_t m;
     while (1) {
     top:
         print_board(&board);
-        move_t move = 0;
-        while (move == 0)
-        { 
+        move = 0;
+
+        while (!move) {
             printf("enter move> ");
-            fgets(buffer, 255, stdin);
-            if (!strcmp(buffer, "undo\n")) {
-                undo_move(&board, m);            
+            fgets(buffer, 64, stdin);
+
+            len = strlen(buffer);
+            if (buffer[len-1] == '\n') {
+                buffer[len-1] = '\0';
+            }
+
+            // this is mostly for switching sides right now
+            // TODO: implement real undo w/ full move history
+            if (!strncmp(buffer, "undo", 4)) {
+                if (last_move != 0) {
+                    undo_move(&board, last_move);
+                    last_move = 0;
+                }
+
                 goto top;
-            } else if (!strcmp(buffer, "exit\n")) {
+            } else if (!strncmp(buffer, "exit", 4)) {
                 return 0;
             }
-            len = strlen(buffer);
-            if (buffer[len-1] == '\n') buffer[len-1] = '\0';
+
             move = move_from_text(buffer, &board);
         }
+
         make_move(&board, move);
         print_board(&board);
 
-        printf("Calculating...\n");
-        m = think(&board);
-        make_move(&board, m);
-        printf("Done calculating...\n");
-        print_move(m);
+        printf("Thinking...\n");
+        last_move = think(&board);
+        make_move(&board, last_move);
+        print_move(last_move);
     }
+
     return 0;
 }

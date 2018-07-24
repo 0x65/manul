@@ -268,19 +268,19 @@ void print_board(const board_t* board) {
         printf("%d |", 8-file);
         for (int rank = 0; rank < 8; rank++) {
             switch (board->pieces[(7-file)*8+rank]) {
-                case EMPTY: wprintf(L" ."); break;
-                case WHITE_PAWN: wprintf(L" ♙"); break;
-                case BLACK_PAWN: wprintf(L" ♟"); break;
-                case WHITE_ROOK: wprintf(L" ♖"); break;
-                case BLACK_ROOK: wprintf(L" ♜"); break;
-                case WHITE_KNIGHT: wprintf(L" ♘"); break;
-                case BLACK_KNIGHT: wprintf(L" ♞"); break;
-                case WHITE_BISHOP: wprintf(L" ♗"); break;
-                case BLACK_BISHOP: wprintf(L" ♝"); break;
-                case WHITE_QUEEN: wprintf(L" ♕"); break;
-                case BLACK_QUEEN: wprintf(L" ♛"); break;
-                case WHITE_KING: wprintf(L" ♔"); break;
-                case BLACK_KING: wprintf(L" ♚"); break;
+                case EMPTY: printf(" ."); break;
+                case WHITE_PAWN: printf(" ♙"); break;
+                case BLACK_PAWN: printf(" ♟"); break;
+                case WHITE_ROOK: printf(" ♖"); break;
+                case BLACK_ROOK: printf(" ♜"); break;
+                case WHITE_KNIGHT: printf(" ♘"); break;
+                case BLACK_KNIGHT: printf(" ♞"); break;
+                case WHITE_BISHOP: printf(" ♗"); break;
+                case BLACK_BISHOP: printf(" ♝"); break;
+                case WHITE_QUEEN: printf(" ♕"); break;
+                case BLACK_QUEEN: printf(" ♛"); break;
+                case WHITE_KING: printf(" ♔"); break;
+                case BLACK_KING: printf(" ♚"); break;
             }
         }
         printf("\n");
