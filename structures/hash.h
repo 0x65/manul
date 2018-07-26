@@ -1,11 +1,12 @@
 #ifndef _HASH_H
 #define _HASH_H
 
+#include <stdint.h>
 #include <time.h>
 
 #include "../utilities.h"
 
-typedef unsigned long long int key_t;
+typedef uint64_t key_t;
 
 typedef struct _hash_keys {
     key_t keys[64][16]; // [position][piece] 

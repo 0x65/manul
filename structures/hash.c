@@ -1,7 +1,7 @@
 #include "hash.h"
 
 void hash_init() {
-    rand_init((unsigned long long int)time(NULL));
+    rand_init((uint64_t)time(NULL));
     for (int i = 0; i < 64; i++) {
         hash_keys.en_passant_targets[i] = rand_64();
         for (int j = 0; j < 16; j++) hash_keys.keys[i][j] = rand_64();

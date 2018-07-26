@@ -1,6 +1,8 @@
 #ifndef _UTILITIES_H
 #define _UTILITIES_H
 
-void rand_init(unsigned long long int seed);
-unsigned long long int rand_64();
+#include <stdint.h>
+
+void rand_init(uint64_t seed);
+uint64_t rand_64();
 #endif
