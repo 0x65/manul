@@ -37,7 +37,7 @@ int compare_boards(board_t* board1, board_t* board2) {
         return 0;
     }
 
-    for (int i = A1; i < H8; i++) {
+    for (int i = A1; i <= H8; i++) {
         if (board1->pieces[i] != board2->pieces[i]) {
             return 0;
         }

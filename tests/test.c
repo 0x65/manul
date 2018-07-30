@@ -42,7 +42,7 @@ void initialize_testing_board(board_t* board) {
         board->piece_bitboard[i] = 0;
     }
 
-    for (int i = A1; i < H8; i++) {
+    for (int i = A1; i <= H8; i++) {
         board->pieces[i] = EMPTY;
     }
 
