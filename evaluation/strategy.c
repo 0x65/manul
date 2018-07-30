@@ -1,3 +1,5 @@
+#include "../masks.h"
+
 #include "strategy.h"
 
 #define POSITION_AND_KING_DISTANCE_BONUS(color, piece) score += color##_##piece##_POSITION_BONUS[square]; \

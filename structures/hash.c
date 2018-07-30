@@ -1,3 +1,7 @@
+#include <time.h>
+
+#include "../utilities.h"
+
 #include "hash.h"
 
 void hash_init() {

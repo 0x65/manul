@@ -2,10 +2,6 @@
 #define _MOVE_H
 
 #include <stdint.h>
-#include <stdio.h>
-#include <ctype.h>
-
-#include "../common.h"
 
 /*
     Moves are represented by a 32-bit integer whose bits are separated into the
@@ -22,8 +18,6 @@
 */
 
 typedef uint32_t move_t;
-
-#define NO_MOVE (0)
 
 #define MOVE_FROM(m) (m&0x3F)
 #define MOVE_TO(m) ((m>>6)&0x3F)

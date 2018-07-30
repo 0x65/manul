@@ -1,13 +1,12 @@
+#include <stdio.h>
+
 #include "bitboard.h"
 
-/*
-    Prints a human-readable form of a bitboard. Empty squares are dots, and set bits are 1s.
-*/
 void print_bitboard(bitboard_t bitboard) {
     for (int file = 0; file < 8; file++) {
         printf("%d |", 8-file);
         for (int rank = 0; rank < 8; rank++) {
-            printf(" %c",  ((bitboard<<(7-rank))&0x8000000000000000)?'1':'.');
+            printf(" %c",  ((bitboard<<(7-rank))&0x8000000000000000) ? '1' : '.');
         }
         bitboard <<= 8;
         printf("\n");

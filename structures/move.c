@@ -1,16 +1,21 @@
+#include <stdio.h>
+
+#include "../common.h"
+
 #include "move.h"
 
-/*
-    Prints a move in long algebraic notation.
-*/
 void print_move(move_t move) {
     int from_square = MOVE_FROM(move), to_square = MOVE_TO(move);
 
     if (IS_CASTLE(move)) {
-        if (to_square > from_square) printf("O-O");
-        else printf("O-O-O");
+        if (to_square > from_square) {
+            printf("O-O");
+        } else {
+            printf("O-O-O");
+        }
     } else {
         printf("%c%d%c%d", FILE_OF(from_square)+'a', RANK_OF(from_square)+1, FILE_OF(to_square)+'a', RANK_OF(to_square)+1);
+
         if (IS_PROMOTION(move)) {
             switch (PROMOTION_PIECE(move)) {
                 case WHITE_QUEEN:
@@ -25,13 +30,11 @@ void print_move(move_t move) {
             }
         }
     }
+
     printf("\n");
 }
 
 
-/*
-    Returns the type of piece a given char represents
-*/
 unsigned char piece_type_from_char(char piece_char) {
     switch (piece_char) {
         case 'P': return WHITE_PAWN;
@@ -47,5 +50,6 @@ unsigned char piece_type_from_char(char piece_char) {
         case 'K': return WHITE_KING;
         case 'k': return BLACK_KING;
     }
+
     return EMPTY;
 }

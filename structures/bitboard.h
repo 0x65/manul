@@ -2,7 +2,6 @@
 #define _BITBOARD_H
 
 #include <stdint.h>
-#include <stdio.h>
 
 typedef uint64_t bitboard_t;
 

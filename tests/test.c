@@ -1,4 +1,5 @@
 #include "../common.h"
+#include "../structures/hash.h"
 
 #include "test.h"
 #include "test_board.h"

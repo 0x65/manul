@@ -2,15 +2,12 @@
 #define _BOARD_H
 
 #include <stdbool.h>
-#include <stdio.h>
-#include <wchar.h>
-#include <string.h>
 
 #include "../common.h"
-#include "../masks.h"
-#include "move.h"
-#include "hash.h"
+
 #include "bitboard.h"
+#include "hash.h"
+#include "move.h"
 
 #define MAX_BOARD_STATES (1024)
 
@@ -54,6 +51,4 @@ void set_board_from_fen_string(board_t* board, const char* fen_string);
 void print_board(const board_t* board);
 move_t move_from_text(const char* text, board_t* board);
 unsigned int repetition_count(const board_t* board);
-
-#include "../moves.h"
 #endif

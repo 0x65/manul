@@ -2,14 +2,11 @@
 #define _HASH_H
 
 #include <stdint.h>
-#include <time.h>
-
-#include "../utilities.h"
 
 typedef uint64_t key_t;
 
 typedef struct _hash_keys {
-    key_t keys[64][16]; // [position][piece] 
+    key_t keys[64][16]; // [position][piece]
     key_t en_passant_targets[64];
     key_t side; // if set on a key, represents black's turn to move
     key_t white_king_side_castle, white_queen_side_castle, black_king_side_castle, black_queen_side_castle;
