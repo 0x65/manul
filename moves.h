@@ -4,10 +4,7 @@
 #include <stdbool.h>
 
 #include "structures/board.h"
-#include "structures/bitboard.h"
 #include "structures/move.h"
-#include "common.h"
-#include "masks.h"
 
 #define MAX_MOVES (256)
 

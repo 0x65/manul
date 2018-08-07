@@ -1,7 +1,8 @@
+#include "../structures/bitboard.h"
+
 #include "../common.h"
 #include "../masks.h"
 #include "../moves.h"
-#include "../structures/bitboard.h"
 
 #include "constants.h"
 #include "evaluate.h"

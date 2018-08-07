@@ -2,6 +2,8 @@
 #include <string.h>
 
 #include "../structures/move.h"
+#include "../common.h"
+#include "../masks.h"
 #include "../moves.h"
 
 #include "test.h"
