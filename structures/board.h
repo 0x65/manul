@@ -52,7 +52,5 @@ unsigned int repetition_count(const board_t* board);
 bool is_theoretical_draw(const board_t* board);
 
 void set_board_from_fen_string(board_t* board, const char* fen_string);
-move_t move_from_text(const char* text, board_t* board);
-
 void print_board(const board_t* board);
 #endif

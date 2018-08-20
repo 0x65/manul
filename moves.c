@@ -1,3 +1,7 @@
+#include <ctype.h>
+#include <string.h>
+#include <wchar.h>
+
 #include "structures/bitboard.h"
 
 #include "common.h"
@@ -208,4 +212,48 @@ unsigned int count_legal_moves(board_t* board) {
         undo_move(board, move_list[i]);
     }
     return moves_found;
+}
+
+
+/*
+    Makes a move_t from a supplied string (in long algebraic notation), or
+    returns 0 if it's an invalid move.
+*/
+move_t move_from_text(const char* text, board_t* board) {
+    int text_length = strlen(text);
+
+    if (text_length != 4 && text_length != 5) {
+        return 0;
+    }
+
+    move_t move = (((text[1]-'1')*8)+(tolower(text[0])-'a')) + ((((text[3]-'1')*8)+(tolower(text[2])-'a'))<<6);
+
+    if (text_length == 5) {
+        if (board->to_move == WHITE) {
+            move |= piece_type_from_char(toupper(text[4]))<<23;
+        } else {
+            move |= piece_type_from_char(tolower(text[4]))<<23;
+        }
+    }
+
+    // check legality
+    move_t move_list[MAX_MOVES];
+    move_t* end_of_move_list = generate_pseudolegal_moves(board, move_list);
+
+    for (int i = 0; &move_list[i] != end_of_move_list; i++) {
+        if ((move_list[i]&0x7800FFF) == move) {
+            if (IS_CASTLE(move_list[i]) && !is_legal_castle(board, move_list[i])) {
+                return 0;
+            }
+
+            make_move(board, move_list[i]);
+
+            if (!is_king_in_check(board, !board->to_move)) {
+                undo_move(board, move_list[i]);
+                return move_list[i];
+            }
+       }
+    }
+
+    return 0;
 }
