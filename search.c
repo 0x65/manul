@@ -2,6 +2,7 @@
 #include <string.h>
 
 #include "evaluation/evaluate.h"
+#include "structures/board.h"
 
 #include "common.h"
 #include "moves.h"

@@ -140,36 +140,6 @@ char is_king_in_check(const board_t* board, unsigned int side) {
 
 
 /*
-    Tests if there is insufficient material to mate.
-*/
-bool is_theoretical_draw(const board_t* board) {
-    unsigned int total_material = board->material[WHITE] + board->material[BLACK];
-
-    if ((total_material <= 13) && !board->piece_bitboard[WHITE_PAWN] && !board->piece_bitboard[BLACK_PAWN]) {
-        if ((board->material[WHITE] < 4) && (board->material[BLACK] < 4)) {
-            return true;
-        }
-
-        if (total_material == 6) {
-            if (board->material[WHITE] == 6 && !board->piece_bitboard[WHITE_BISHOP]) {
-                return true;
-            }
-
-            if (board->material[BLACK] == 6 && !board->piece_bitboard[BLACK_BISHOP]) {
-                return true;
-            }
-        } else if (total_material == 9 && board->piece_bitboard[WHITE_KNIGHT] && board->piece_bitboard[BLACK_KNIGHT]) {
-            return true;
-        } else if (total_material == 13 && board->piece_bitboard[WHITE_ROOK] && board->piece_bitboard[BLACK_ROOK]) {
-            return true;
-        }
-    }
-
-    return false;
-}
-
-
-/*
     Tests to see if any pieces attack the squares on a castle path. Note that this DOES NOT
     check if the path itself is clear.
 */
