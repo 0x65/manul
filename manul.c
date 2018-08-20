@@ -71,6 +71,11 @@ int main(int argc, char* argv[]) {
 
         printf("Thinking...\n");
         last_move = think(&board);
+
+        if (!last_move) {
+            break;
+        }
+
         make_move(&board, last_move);
         print_move(last_move);
     }
